@@ -92,8 +92,8 @@ async def alive(client, message):
     try:
         if output.language:
             out += f"**Language**: ```{output.language}```\n\n"
-        if output.output:
-            out += f"**Output**:\n```{output.output}```\n\n"
+        # if output.output:
+        #     out += f"**Output**:\n```{output.output}```\n\n"
         if output.stdout:
             out += f"**Stdout**:\n```{output.stdout}```\n\n"
         if output.stderr:
