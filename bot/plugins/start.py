@@ -19,8 +19,11 @@ async def start_handle(client, message):
                     ]
                 )
             )
-        # elif message.text.split()[1] == 'a':
-        #     return
-        else:
-            return
-            
+    else:
+        await message.reply(
+            "**Usage**\n"
+            "`/execute` or `/execute [language]` if you want to go for a quick code execution.\n\n"
+            "Executing files are not supported yet but will in future\n\n"
+            "you can also use me via inline:\n`@pistonexecbot python3 print('Hello World')`\n\n"
+            "all available languages can be seen on /langs"
+        )
