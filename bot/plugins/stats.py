@@ -29,7 +29,7 @@ async def stats_button(client, query):
     start = float(message[1])
     end = float(message[2])
     await query.answer(
-        f'Execute Time: {round((end - start) * 1000, 3)}s',
+        f'Execute Time: {round((end - start) * 1000, 3)}ms',
         show_alert=True
     )
     

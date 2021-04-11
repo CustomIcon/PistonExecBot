@@ -2,6 +2,7 @@ from bot import bot
 from pyrogram import filters
 from bot.utils import langs, lang_names
 from pyrogram import types
+import time
 
 from piston import Piston
 
@@ -80,6 +81,7 @@ async def alive(client, message):
         arg = arg.text.split(" ")
     else:
         arg = None
+    start_time = time.time()
     output = await piston.execute(
         language=lan if len(message.text.split(None, 1)) == 2 else lan[0],
         source=source.text,
