@@ -70,7 +70,7 @@ async def inline_exec(client, query):
                     description=out.stdout or out.stderr,
                     input_message_content=types.InputTextMessageContent(
                         msg,
-                        parse_mode=None
+                        parse_mode='markdown'
                     ),
                     reply_markup=types.InlineKeyboardMarkup(
                         [
