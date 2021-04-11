@@ -12,7 +12,7 @@ execute = {}
 
 @bot.on_inline_query()
 async def inline_exec(client, query):
-    string = query.query.lower()
+    string = query.query
     answers = []
     if string == '':
         for l in langs:
