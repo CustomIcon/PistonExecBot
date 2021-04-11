@@ -2,7 +2,7 @@ from os import path
 from configparser import ConfigParser
 from pyrogram import Client
 from piston import Piston
-from .utils import langs
+from .utils import langs, lang_names
 
 piston = Piston()
 
@@ -40,6 +40,7 @@ class bot(Client):
                 languages += f'|{(v.name+"-"+(v.version or "")):<15}'
             j += 1
             langs.append(v)
+            lang_names.append(v.name)
         j += 1
         print('+===============================================================+')
         print('|                    Loaded Languages                           |')
@@ -53,4 +54,3 @@ class bot(Client):
         await super().send_message(947138292, "Bot going offline")
         await super().stop()
         print("bot stopped. Bye.")
-    
