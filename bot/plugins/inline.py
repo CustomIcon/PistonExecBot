@@ -39,7 +39,6 @@ async def inline_exec(client, query):
                 )    
             )
     elif string.split()[0] in lang_names:
-        await asyncio.sleep(1)
         if len(string.split()) == 1:
             await client.answer_inline_query(
                 query.id,
@@ -55,7 +54,7 @@ async def inline_exec(client, query):
 
             msg = f"**Language:** `{out.language}-{out.version}`\n\n**Code:**\n```{source}```\n\n"
             if out.stdout:
-                msg += f"**Stdout:**\n```{out.stdout}```"
+                msg += f"**Stdout:**\n```{out.stdout}```\n\n"
             if out.stderr:
                 msg +=f"**Stderr:**\n```{out.stderr}```"
             answers.append(
@@ -78,13 +77,13 @@ async def inline_exec(client, query):
                 )
             )
             execute[query.from_user.id] = True
-        except AttributeError as err:
+        except AttributeError:
             answers.append(
                 types.InlineQueryResultArticle(
                     "Error",
                     description=str(err),
                     input_message_content=types.InputTextMessageContent(
-                        str(err),
+                        "Bot is currently being Used by another user. wait for 5 seconds",
                     )
                 )
             )
