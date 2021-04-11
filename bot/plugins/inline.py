@@ -15,8 +15,9 @@ async def inline_exec(client, query):
     string = query.query
     answers = []
     if string == '':
+        results = []
         for l in langs:
-            answers.append(
+            results.append(
                 types.InlineQueryResultArticle(
                     title=l.name,
                     description=l.version or None,
@@ -38,6 +39,12 @@ async def inline_exec(client, query):
                     )
                 )    
             )
+        await client.answer_inline_query(
+            query.id,
+            results=results,
+            cache_time=0,
+        )
+        return
     elif string.split()[0] in lang_names:
         if len(string.split()) == 1:
             await client.answer_inline_query(
@@ -63,6 +70,7 @@ async def inline_exec(client, query):
                     description=out.stdout or out.stderr,
                     input_message_content=types.InputTextMessageContent(
                         msg,
+                        parse_mode=None
                     ),
                     reply_markup=types.InlineKeyboardMarkup(
                         [
