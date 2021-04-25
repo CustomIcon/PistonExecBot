@@ -9,22 +9,23 @@ piston = Piston()
 
 execute = {}
 
+NEXT_OFFSET = 25
 
 @bot.on_inline_query()
 async def inline_exec(client, query):
     string = query.query
+    offset = int(query.offset or 0)
     answers = []
     if string == '':
-        results = []
-        for l in langs:
-            results.append(
+        for l in langs[offset: offset + NEXT_OFFSET]:
+            answers.append(
                 types.InlineQueryResultArticle(
                     title=l.name,
                     description=l.version or None,
                     input_message_content=types.InputTextMessageContent(
                         "**Language:** `{}`{}\nPress the button below to Execute your code:".format(
                             l.name,
-                            '\n**Version:**{}'.format(l.version) or ''
+                            '\n**Version:** `{}`'.format(l.version) or ''
                         )
                     ),
                     reply_markup=types.InlineKeyboardMarkup(
@@ -39,12 +40,6 @@ async def inline_exec(client, query):
                     )
                 )    
             )
-        await client.answer_inline_query(
-            query.id,
-            results=results,
-            cache_time=0,
-        )
-        return
     elif string.split()[0] in lang_names:
         if len(string.split()) == 1:
             await client.answer_inline_query(
@@ -99,6 +94,7 @@ async def inline_exec(client, query):
         await client.answer_inline_query(
             query.id,
             results=answers,
+            next_offset=str(offset + NEXT_OFFSET),
             cache_time=0,
         )
     except errors.exceptions.bad_request_400.QueryIdInvalid:
