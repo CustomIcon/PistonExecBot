@@ -54,7 +54,7 @@ async def alive(client, message):
             return   
         try:
             for l in langs:
-                if lang[0] == l.language:
+                if lan[0] == l.language:
                     codes = "**Language**: `{}`\n**Version**: `{}`\n\nGive me a code to execute:".format(
                         l.language,
                         l.version
