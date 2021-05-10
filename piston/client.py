@@ -11,7 +11,7 @@ from .types import Language
 class Piston:
     def __init__(
         self,
-        base_url: Optional[str] = "https://emkc.org/api/v1/piston"
+        base_url: Optional[str] = "https://emkc.org/api/v2/piston"
     ):
         """Setup all urls and session."""
         self.base_url = base_url
@@ -20,13 +20,15 @@ class Piston:
         self,
         language=str,
         source=str,
+        version=str,
         stdin: str = None,
         args: list = None
     ) -> attr:
         url = f"{self.base_url}/execute"
         data = {
             'language': language,
-            'source': source
+            'version': version,
+            'files': source
         }
         if stdin:
             data['stdin'] = stdin
@@ -41,11 +43,11 @@ class Piston:
             await ses.close()
 
     async def versions(self) -> None:
-        url = f"{self.base_url}/versions"
-        vers = []
+        url = f"{self.base_url}/runtimes"
         async with aiohttp.ClientSession() as ses:
             async with ses.get(url) as resp:
                 out = await resp.json()
+                vers = []
                 try:
                     for l in out:
                         vers.append(Language(l))

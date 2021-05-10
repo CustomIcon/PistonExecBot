@@ -12,10 +12,10 @@ async def languages(client, message):
     languages = ''
     for v in (await piston.versions()):
         if j == 2:
-            languages += f'|{(v.name+""):<16}|{(v.version or ""):<16}|\n'
+            languages += f'|{(v.language+""):<16}|{(v.version or ""):<16}|\n'
             j = 0
         else:
-            languages += f'|{(v.name+""):<16}|{(v.version or ""):<16}|\n'
+            languages += f'|{(v.language+""):<16}|{(v.version or ""):<16}|\n'
         j += 1
         langs.append(v)
     j += 1

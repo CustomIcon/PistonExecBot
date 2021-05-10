@@ -20,11 +20,11 @@ async def inline_exec(client, query):
         for l in langs[offset: offset + NEXT_OFFSET]:
             answers.append(
                 types.InlineQueryResultArticle(
-                    title=l.name,
+                    title=l.language,
                     description=l.version or None,
                     input_message_content=types.InputTextMessageContent(
                         "**Language:** `{}`{}\nPress the button below to Execute your code:".format(
-                            l.name,
+                            l.language,
                             '\n**Version:** `{}`'.format(l.version) or ''
                         )
                     ),
@@ -33,7 +33,7 @@ async def inline_exec(client, query):
                             [
                                 types.InlineKeyboardButton(
                                     'Execute',
-                                    switch_inline_query_current_chat=l.name + " "
+                                    switch_inline_query_current_chat=l.language + " "
                                 )
                             ]
                         ]
@@ -51,18 +51,22 @@ async def inline_exec(client, query):
             return
         source = string.split(None, 1)[1]
         start_time = time.time()
-        out = await piston.execute(language=string.split()[0], source=source)
+        for l in langs:
+            if string.split()[0] == l.language:
+                out = await piston.execute(
+                    language=string.split()[0],
+                    version=l.version,
+                    source=source
+                )
         try:
 
             msg = f"**Language:** `{out.language}-{out.version}`\n\n**Code:**\n```{source}```\n\n"
-            if out.stdout:
-                msg += f"**Stdout:**\n```{out.stdout}```\n\n"
-            if out.stderr:
-                msg +=f"**Stderr:**\n```{out.stderr}```"
+            if out.run:
+                msg += f"**Output:**\n```{out.run.output}```\n\n"
             answers.append(
                 types.InlineQueryResultArticle(
                     "Output:",
-                    description=out.stdout or out.stderr,
+                    description=out.run.stdout or out.run.stderr,
                     input_message_content=types.InputTextMessageContent(
                         msg,
                         parse_mode='markdown'
@@ -80,16 +84,21 @@ async def inline_exec(client, query):
                 )
             )
             execute[query.from_user.id] = True
-        except AttributeError:
+        except AttributeError as err:
             answers.append(
                 types.InlineQueryResultArticle(
                     "Error",
                     description=str(err),
                     input_message_content=types.InputTextMessageContent(
-                        "Bot is currently being Used by another user. wait for 5 seconds",
+                        str(err),
                     )
                 )
             )
+        return await client.answer_inline_query(
+                    query.id,
+                    results=answers,
+                    cache_time=0,
+                )
     try:
         await client.answer_inline_query(
             query.id,

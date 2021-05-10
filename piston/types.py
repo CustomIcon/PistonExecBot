@@ -15,7 +15,7 @@ class Language(PistonType):
         r=dict,
         **kwargs
     ):
-        self.name = r['name']
+        self.language = r['language']
         self.aliases = r['aliases']
         try:
             self.version = r['version']

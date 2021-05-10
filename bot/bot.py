@@ -34,13 +34,13 @@ class bot(Client):
         j = 1
         for v in (await piston.versions()):
             if j == 4:
-                languages += f'|{(v.name+"-"+(v.version or "")):<15}|\n'
+                languages += f'|{(v.language+"-"+(v.version or "")):<15}|\n'
                 j = 0
             else:
-                languages += f'|{(v.name+"-"+(v.version or "")):<15}'
+                languages += f'|{(v.language+"-"+(v.version or "")):<15}'
             j += 1
             langs.append(v)
-            lang_names.append(v.name)
+            lang_names.append(v.language)
         j += 1
         print('+===============================================================+')
         print('|                    Loaded Languages                           |')

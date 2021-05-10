@@ -43,16 +43,13 @@ class Attrify(dict):
             12345
             >>> complex_nested_resp = {"data": {"results": [{"name": "something"}, {"name": "anything"}]}}
             >>> complex_nested_resp = Attrify(complex_nested_resp)
-            >>> complex_nested_resp.data.results[0].name
+            >>> complex_nested_resp.data.results[0].language
             something
         Notes:
             1. If both args and kwargs are given, args[0] will be preffered
             2. Tuples and Sets are converted to List during conversion
         """
-        if args:
-            cdict = args[0]
-        else:
-            cdict = kwargs
+        cdict = args[0] if args else kwargs
         for key in cdict:
             if isinstance(cdict[key], dict):
                 cdict[key] = Attrify(cdict[key])

@@ -41,7 +41,7 @@ async def alive(client, message):
             codes = "**Language**: `{}`\n\nGive me a code to execute:".format(lan)
     else:
         for l in langs:
-            buttons.append([types.KeyboardButton(l.name + " " + (l.version or ""))])
+            buttons.append([types.KeyboardButton(l.language + " " + (l.version or ""))])
         language = await client.ask(
             message.chat.id,
             f"pick a language from Keyboard:",
@@ -82,22 +82,23 @@ async def alive(client, message):
     else:
         arg = None
     start_time = time.time()
-    output = await piston.execute(
-        language=lan if len(message.text.split(None, 1)) == 2 else lan[0],
-        source=source.text,
-        stdin=std,
-        args=arg
-    )
+    for l in langs:
+        if lan[0] == l.language:
+            output = await piston.execute(
+                language=lan if len(message.text.split(None, 1)) == 2 else lan[0],
+                source=source.text,
+                version=l.version,
+                stdin=std,
+                args=arg
+            )
     out = "**-Result-**\n"
     try:
         if output.language:
             out += f"**Language**: ```{output.language}```\n\n"
         # if output.output:
         #     out += f"**Output**:\n```{output.output}```\n\n"
-        if output.stdout:
-            out += f"**Stdout**:\n```{output.stdout}```\n\n"
-        if output.stderr:
-            out += f"**Stderr**:\n```{output.stderr}```"        
+        if output.run:
+            out += f"**Stdout**:\n```{output.run.output}```\n\n"     
         await message.reply(
             out,
             reply_markup=types.InlineKeyboardMarkup(
@@ -112,8 +113,8 @@ async def alive(client, message):
             )
         )
         
-    except AttributeError:
-        await message.reply("Code Execution was not Successful!")
+    except AttributeError as err:
+        await message.reply(f"Code Execution was not Successful!\n```{err}```")
         
 
 
