@@ -53,7 +53,12 @@ async def alive(client, message):
             await message.reply("Wrong language of choice", reply_markup=types.ReplyKeyboardRemove())
             return   
         try:
-            codes = "**Language**: `{}`\n**Version**: `{}`\n\nGive me a code to execute:".format(lan[0], lan[1])
+            for l in langs:
+                if lang[0] == l.language:
+                    codes = "**Language**: `{}`\n**Version**: `{}`\n\nGive me a code to execute:".format(
+                        l.language,
+                        l.version
+                    )
         except IndexError:
             codes = "**Language**: `{}`\n\nGive me a code to execute:".format(lan[0])
     await message.reply("got it!", reply_markup=types.ReplyKeyboardRemove())
