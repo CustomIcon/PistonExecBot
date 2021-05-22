@@ -78,7 +78,18 @@ async def inline_exec(client, query):
                                     'stats',
                                     callback_data=f'stats-{start_time}-{time.time()}'
                                 )
+                            ],
+                            [
+                                types.InlineKeyboardButton(
+                                    'Fork',
+                                    switch_inline_query_current_chat=f'{out.language} {source}'
+                                ),
+                                types.InlineKeyboardButton(
+                                    'Try Again',
+                                    switch_inline_query_current_chat=f'{out.language} '
+                                ),    
                             ]
+                            
                         ]
                     )
                 )
